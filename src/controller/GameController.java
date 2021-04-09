@@ -102,6 +102,10 @@ public class GameController {
             return this.collapse(Direction.LEFT);
         }
 
+        if (command == Command.D) {
+            return this.collapse(Direction.RIGHT);
+        }
+
         // TODO do something about the game board
         Cell[][] data = gameBoard.getState();
         // TODO modify data according to input
@@ -132,20 +136,39 @@ public class GameController {
     }
 
     public String collapse(Direction direction) {
-        if (direction == Direction.LEFT) {
-            return collapseLeft();
+        switch (direction) {
+            case LEFT: collapseLeft(); break;
+            case RIGHT: collapseRight(); break;
         }
-        return "---";
+        return gameBoardView.render();
     }
 
-    private String collapseLeft() {
+    private void collapseLeft() {
         Cell[][] state = this.gameBoard.getState();
         for (int i = 0; i < 4; i++) {
             state[i] = collapse(state[i]);
         }
         this.gameBoard.setState(state);
         this.gameBoard.notifyObserver();
-        return gameBoardView.render();
+    }
+
+    private void collapseRight() {
+        Cell[][] state = this.gameBoard.getState();
+        for (int i = 0; i < 4; i++) {
+            state[i] = reverse(state[i]);
+            state[i] = collapse(state[i]);
+            state[i] = reverse(state[i]);
+        }
+        this.gameBoard.setState(state);
+        this.gameBoard.notifyObserver();
+    }
+
+    private Cell[] reverse(Cell[] cells) {
+        Cell[] result = new Cell[4];
+        for (int i = 0; i < 4; i++) {
+            result[3 - i] = cells[i];
+        }
+        return result;
     }
 
     /**
@@ -160,10 +183,8 @@ public class GameController {
         for (int i = 0; i < 4; i++) {
             result[i] = new Cell();
         }
-        int index = 0;
-        int currentValue = 0;
-        int nextValue = 0;
-        int nextIndex = index;
+        int index = 0, nextIndex;
+        int currentValue = 0, nextValue = 0;
         while (index < 4) {
             // find the current value
             for (int i = index; i < 4; i++) {

@@ -4,7 +4,6 @@ package model;
 import util.random.RandomService;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameBoard extends Subject<Cell[][]> {
     public GameBoard() {
