@@ -25,7 +25,6 @@ public class Cell {
 
     public void unCheck() {
         this.checked = false;
-        this.value = 0;
     }
 
     public boolean isChecked() {
@@ -34,7 +33,7 @@ public class Cell {
 
     @Override
     public String toString() {
-        if (checked) {
+        if (value != 0) {
             return value + "";
         } else {
             return "-";

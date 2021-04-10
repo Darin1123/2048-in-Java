@@ -43,7 +43,7 @@ public class GameBoardView extends Observer<Cell[][]> implements View {
     }
 
     private String formatNumber(Cell cell) {
-        if (!cell.isChecked()) {
+        if (cell.getValue() == 0) {
             return ".      ";
         }
         int numOfDigits = String.valueOf(cell.getValue()).length();
