@@ -5,7 +5,18 @@ import util.random.RandomService;
 
 import java.util.*;
 
-public class GameBoard extends Subject<Cell[][]> {
+public class GameBoard {
+
+    private Cell[][] state;
+
+    public Cell[][] getState() {
+        return state;
+    }
+
+    public void setState(Cell[][] state) {
+        this.state = state;
+    }
+
     public GameBoard() {
         Cell[][] state = new Cell[4][4];
         for (int i = 0; i < 4; i++) {

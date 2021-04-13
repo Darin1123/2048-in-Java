@@ -1,31 +1,26 @@
 package view;
 
 import model.Cell;
-import model.Subject;
+import model.GameBoard;
 
-public class GameBoardView extends Observer<Cell[][]> implements View {
+public class GameBoardView implements View {
+    private GameBoard gameBoard;
     private char tableCharacter;
     private final char DEFAULT_TABLE_CHAR = '.';
-    private Cell[][] subjectState;
-    public GameBoardView(Subject<Cell[][]> subject) {
-        super(subject);
+    public GameBoardView(GameBoard gameBoard) {
         tableCharacter = DEFAULT_TABLE_CHAR;
-        this.subjectState = subject.getState();
+        this.gameBoard = gameBoard;
     }
 
     public void setTableCharacter(char newChar) {
         this.tableCharacter = newChar;
     }
 
-    @Override
-    public void update() {
-        this.subjectState = this.subject.getState();
-    }
 
     @Override
     public String render() {
         StringBuilder builder = new StringBuilder();
-        Cell[][] data = this.subjectState;
+        Cell[][] data = this.gameBoard.getState();
         for (int i = 0; i < 4; i++) {
             builder.append(".............................\n");
 //            builder.append(".      .      .      .      .\n");

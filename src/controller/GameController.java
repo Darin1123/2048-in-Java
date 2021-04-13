@@ -1,8 +1,9 @@
 package controller;
 
 import model.Cell;
+import model.ErrorMessage;
 import model.GameBoard;
-import util.enumeration.Command;
+import runner.ViewRegistry;
 import util.enumeration.Direction;
 import util.random.RandomService;
 import view.*;
@@ -14,22 +15,16 @@ import java.util.List;
 
 public class GameController {
     private final GameBoard gameBoard;
-    private final GameBoardView gameBoardView;
-    private final HelpView helpView;
-    private final ErrorView errorView;
-    private final WelcomeView welcomeView;
+    private final ErrorMessage errorMessage;
+    private ViewRegistry viewRegistry;
 
     public GameController(
             GameBoard gameBoard,
-            GameBoardView gameBoardView,
-            HelpView helpView,
-            ErrorView errorView,
-            WelcomeView welcomeView) {
+            ErrorMessage errorMessage,
+            ViewRegistry viewRegistry) {
         this.gameBoard = gameBoard;
-        this.gameBoardView = gameBoardView;
-        this.helpView = helpView;
-        this.errorView = errorView;
-        this.welcomeView = welcomeView;
+        this.errorMessage = errorMessage;
+        this.viewRegistry = viewRegistry;
     }
 
     public String reset() {
@@ -59,48 +54,9 @@ public class GameController {
 
         state[x1][y1].setValue(v1);
         state[x2][y2].setValue(v2);
-        this.gameBoard.setState(state);
-        this.gameBoard.notifyObserver();
 
-        return welcomeView.render() + gameBoardView.render();
-    }
-
-    public String process(String input) {
-        Command command;
-        try {
-            command = Command.valueOf(input.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            errorView.setErrorMessage("Unknown command '" + input + "', enter 'help' to see how to play the game.");
-            return errorView.render();
-        }
-
-        // process the input
-        if (command == Command.EXIT) {
-            System.out.println("See you around!");
-            System.exit(1);
-        }
-
-        if (command == Command.HELP) {
-            return this.helpView.render();
-        }
-
-        if (command == Command.R) {
-            return this.reset();
-        }
-
-        if (command == Command.A) {
-            return this.collapse(Direction.LEFT);
-        }
-
-        if (command == Command.D) {
-            return this.collapse(Direction.RIGHT);
-        }
-
-        if (command == Command.W) {
-            return this.collapse(Direction.UP);
-        }
-
-        return welcomeView.render();
+        return viewRegistry.get("hello").render() +
+                viewRegistry.get("board").render();
     }
 
     public boolean checkGameOver() {
@@ -148,8 +104,7 @@ public class GameController {
         this.uncheckAll(state);
         // TODO generate a new number in a random empty cell
         this.gameBoard.setState(state);
-        this.gameBoard.notifyObserver();
-        return gameBoardView.render();
+        return viewRegistry.get("board").render();
     }
 
     private String collapseUP() {
@@ -162,8 +117,7 @@ public class GameController {
         this.uncheckAll(state);
         // TODO generate a new number in a random empty cell
         this.gameBoard.setState(state);
-        this.gameBoard.notifyObserver();
-        return gameBoardView.render();
+        return viewRegistry.get("board").render();
     }
 
     private String collapseLeft() {
@@ -204,8 +158,7 @@ public class GameController {
         this.uncheckAll(state);
         // TODO generate a new number in a random empty cell
         this.gameBoard.setState(state);
-        this.gameBoard.notifyObserver();
-        return gameBoardView.render();
+        return viewRegistry.get("board").render();
     }
 
     private String collapseRight() {
@@ -218,8 +171,7 @@ public class GameController {
         this.uncheckAll(state);
         // TODO generate a new number in a random empty cell
         this.gameBoard.setState(state);
-        this.gameBoard.notifyObserver();
-        return gameBoardView.render();
+        return viewRegistry.get("board").render();
     }
 
     private void uncheckAll(Cell[][] state) {
@@ -231,4 +183,20 @@ public class GameController {
     }
 
 
+    public String displayError(String errorMessage) {
+        this.errorMessage.setMessage(errorMessage);
+        return this.viewRegistry.get("error").render();
+    }
+
+    public String displayGameBoard() {
+        return this.viewRegistry.get("board").render();
+    }
+
+    public String displayHelp() {
+        return this.viewRegistry.get("help").render();
+    }
+
+    public String displayWelcome() {
+        return this.viewRegistry.get("welcome").render();
+    }
 }

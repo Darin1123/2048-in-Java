@@ -1,18 +1,20 @@
 package view;
 
-public class ErrorView implements View {
-    private String errorMessage;
+import model.ErrorMessage;
 
-    public ErrorView() {
-        this.errorMessage = "Error!";
+public class ErrorView implements View {
+    private ErrorMessage errorMessage;
+
+    public ErrorView(ErrorMessage errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
     public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+        this.errorMessage.setMessage(errorMessage);
     }
 
     @Override
     public String render() {
-        return this.errorMessage;
+        return this.errorMessage.getMessage();
     }
 }
