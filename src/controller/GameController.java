@@ -4,6 +4,7 @@ import model.Cell;
 import model.ErrorMessage;
 import model.GameBoard;
 import runner.ViewRegistry;
+import util.Point;
 import util.enumeration.Direction;
 import util.random.RandomService;
 import view.*;
@@ -16,7 +17,7 @@ import java.util.List;
 public class GameController {
     private final GameBoard gameBoard;
     private final ErrorMessage errorMessage;
-    private ViewRegistry viewRegistry;
+    private final ViewRegistry viewRegistry;
 
     public GameController(
             GameBoard gameBoard,
@@ -55,7 +56,9 @@ public class GameController {
         state[x1][y1].setValue(v1);
         state[x2][y2].setValue(v2);
 
-        return viewRegistry.get("hello").render() +
+        gameBoard.setState(state);
+
+        return viewRegistry.get("welcome").render() +
                 viewRegistry.get("board").render();
     }
 
@@ -86,102 +89,13 @@ public class GameController {
             case RIGHT:
                 return collapseRight();
             case UP:
-                return collapseUP();
+                return collapseUp();
             case DOWN:
                 return collapseDown();
             default:
                 return ((View) () -> "Unknown direction").render();
         }
     }
-
-    private String collapseDown() {
-        Cell[][] state = this.gameBoard.getState();
-        // TODO
-
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
-        this.uncheckAll(state);
-        // TODO generate a new number in a random empty cell
-        this.gameBoard.setState(state);
-        return viewRegistry.get("board").render();
-    }
-
-    private String collapseUP() {
-        Cell[][] state = this.gameBoard.getState();
-        // TODO
-
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
-        this.uncheckAll(state);
-        // TODO generate a new number in a random empty cell
-        this.gameBoard.setState(state);
-        return viewRegistry.get("board").render();
-    }
-
-    private String collapseLeft() {
-        Cell[][] state = this.gameBoard.getState();
-        for (int i = 0; i < 4; i++) {  // iterate by rows
-            for (int j = 0; j < 4; j++) {  // iterate row items
-                if (state[i][j].getValue() != 0) {  // find the first non-zero item
-                    for (int k = j - 1; k >= 0; k--) {  // look back and find farthest non-zero cell
-                        if (state[i][k].getValue() != 0) {  // find the non-zero target
-                            if (state[i][k].isChecked()) {  // if checked, directly move that to the next
-                                state[i][k + 1].setValue(state[i][j].getValue());  // move
-                                state[i][j].setValue(0);  // set that to 0
-                                break;
-                            } else {  // it is unchecked
-                                // compare values
-                                if (state[i][k].getValue() == state[i][j].getValue()) {  // same -> merge
-                                    state[i][k].setValue(state[i][k].getValue() * 2);  // grow
-                                    state[i][k].check();  // check only after merging
-                                    state[i][j].setValue(0);  // set that to zero
-                                } else {  // different -> move
-                                    state[i][k + 1].setValue(state[i][j].getValue());  // move
-                                    state[i][j].setValue(0);  // set that to zero
-                                }
-                                break;
-                            }
-                        } else if (k == 0) {  // reaches the head, and it is unchecked
-                            state[i][0].setValue(state[i][j].getValue());  // place that item to the head
-                            state[i][j].setValue(0);  // set that to 0
-                        }
-                    }
-                }
-            }
-        }
-
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
-        this.uncheckAll(state);
-        // TODO generate a new number in a random empty cell
-        this.gameBoard.setState(state);
-        return viewRegistry.get("board").render();
-    }
-
-    private String collapseRight() {
-        Cell[][] state = this.gameBoard.getState();
-        // TODO
-
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
-        this.uncheckAll(state);
-        // TODO generate a new number in a random empty cell
-        this.gameBoard.setState(state);
-        return viewRegistry.get("board").render();
-    }
-
-    private void uncheckAll(Cell[][] state) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                state[i][j].unCheck();
-            }
-        }
-    }
-
 
     public String displayError(String errorMessage) {
         this.errorMessage.setMessage(errorMessage);
@@ -198,5 +112,244 @@ public class GameController {
 
     public String displayWelcome() {
         return this.viewRegistry.get("welcome").render();
+    }
+
+    private String collapseDown() {
+        Cell[][] state = this.gameBoard.getState();
+        boolean changed = false;
+        for (int i = 0; i < 4; i++) {  // iterate by columns
+            for (int j = 3; j >= 0; j--) {  // iterate column items
+                if (state[j][i].getValue() != 0) {  // find the first non-zero item
+                    for (int k = j + 1; k <= 3; k++) {  // look back and find farthest non-zero cell
+                        if (state[k][i].getValue() != 0) {  // find the non-zero target
+                            if (state[k][i].isChecked()) {  // if checked, directly move that to the next
+                                state[k - 1][i].setValue(state[j][i].getValue());  // move
+                                if (k - 1 != j) {
+                                    state[j][i].setValue(0);  // set that to 0
+                                    changed = true;
+                                }
+                                break;
+                            } else {  // it is unchecked
+                                // compare values
+                                if (state[k][i].getValue() == state[j][i].getValue()) {  // same -> merge
+                                    state[k][i].setValue(state[k][i].getValue() * 2);  // grow
+                                    state[k][i].check();  // check only after merging
+                                    state[j][i].setValue(0);  // set that to zero
+                                    changed = true;
+                                } else {  // different -> move
+                                    state[k - 1][i].setValue(state[j][i].getValue());  // move
+                                    if (k - 1 != j) {
+                                        state[j][i].setValue(0);  // set that to 0
+                                        changed = true;
+                                    }
+                                }
+                                break;
+                            }
+                        } else if (k == 3) {  // reaches the head, and it is unchecked
+                            state[3][i].setValue(state[j][i].getValue());  // place that item to the head
+                            state[j][i].setValue(0);  // set that to 0
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (checkGameOver()) {
+            return ((View) () -> "game over.").render();
+        }
+        this.uncheckAll(state);
+        // generate a new number in a random empty cell
+        if (changed) {
+            generateNew(state);
+        }
+        this.gameBoard.setState(state);
+        return viewRegistry.get("board").render();
+    }
+
+    private String collapseUp() {
+        Cell[][] state = this.gameBoard.getState();
+        boolean changed = false;
+        for (int i = 0; i < 4; i++) {  // iterate by columns
+            for (int j = 0; j < 4; j++) {  // iterate column items
+                if (state[j][i].getValue() != 0) {  // find the first non-zero item
+                    for (int k = j - 1; k >= 0; k--) {  // look back and find farthest non-zero cell
+                        if (state[k][i].getValue() != 0) {  // find the non-zero target
+                            if (state[k][i].isChecked()) {  // if checked, directly move that to the next
+                                state[k + 1][i].setValue(state[j][i].getValue());  // move
+                                if (k + 1 != j) {
+                                    state[j][i].setValue(0);  // set that to 0
+                                    changed = true;
+                                }
+                                break;
+                            } else {  // it is unchecked
+                                // compare values
+                                if (state[k][i].getValue() == state[j][i].getValue()) {  // same -> merge
+                                    state[k][i].setValue(state[k][i].getValue() * 2);  // grow
+                                    state[k][i].check();  // check only after merging
+                                    state[j][i].setValue(0);  // set that to zero
+                                    changed = true;
+                                } else {  // different -> move
+                                    state[k + 1][i].setValue(state[j][i].getValue());  // move
+                                    if (k + 1 != j) {
+                                        state[j][i].setValue(0);  // set that to zero
+                                        changed = true;
+                                    }
+                                }
+                                break;
+                            }
+                        } else if (k == 0) {  // reaches the head, and it is unchecked
+                            state[0][i].setValue(state[j][i].getValue());  // place that item to the head
+                            state[j][i].setValue(0);  // set that to 0
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (checkGameOver()) {
+            return ((View) () -> "game over.").render();
+        }
+        this.uncheckAll(state);
+        // generate a new number in a random empty cell
+        if (changed) {
+            generateNew(state);
+        }
+        this.gameBoard.setState(state);
+        return viewRegistry.get("board").render();
+    }
+
+    private String collapseLeft() {
+        Cell[][] state = this.gameBoard.getState();
+        boolean changed = false;
+        for (int i = 0; i < 4; i++) {  // iterate by rows
+            for (int j = 0; j < 4; j++) {  // iterate row items
+                if (state[i][j].getValue() != 0) {  // find the first non-zero item
+                    for (int k = j - 1; k >= 0; k--) {  // look back and find farthest non-zero cell
+                        if (state[i][k].getValue() != 0) {  // find the farthest non-zero target
+                            if (state[i][k].isChecked()) {  // if checked, directly move that to the next
+                                state[i][k + 1].setValue(state[i][j].getValue());  // move
+                                if (k + 1 != j) {
+                                    state[i][j].setValue(0);  // set that to 0
+                                    changed = true;
+
+                                }
+                                break;
+                            } else {  // it is unchecked
+                                // compare values
+                                if (state[i][k].getValue() == state[i][j].getValue()) {  // same -> merge
+                                    changed = true;
+                                    state[i][k].setValue(state[i][k].getValue() * 2);  // grow
+                                    state[i][k].check();  // check only after merging
+                                    state[i][j].setValue(0);  // set that to zero
+                                } else {  // different -> move
+                                    state[i][k + 1].setValue(state[i][j].getValue());  // move
+                                    if (k + 1 != j) {
+                                        state[i][j].setValue(0);  // set that to 0
+                                        changed = true;
+                                    }
+                                }
+                                break;
+                            }
+                        } else if (k == 0) {  // reaches the head, and it is unchecked
+                            state[i][0].setValue(state[i][j].getValue());  // place that item to the head
+                            state[i][j].setValue(0);  // set that to 0
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (checkGameOver()) {
+            return ((View) () -> "game over.").render();
+        }
+        this.uncheckAll(state);
+        // generate a new number in a random empty cell
+        if (changed) {
+            generateNew(state);
+        }
+        this.gameBoard.setState(state);
+        return viewRegistry.get("board").render();
+    }
+
+    private String collapseRight() {
+        Cell[][] state = this.gameBoard.getState();
+        boolean changed = false;
+        for (int i = 0; i < 4; i++) {  // iterate by rows
+            for (int j = 3; j >= 0; j--) {  // iterate row items
+                if (state[i][j].getValue() != 0) {  // find the first non-zero item
+                    for (int k = j + 1; k <= 3; k++) {  // look back and find farthest non-zero cell
+                        if (state[i][k].getValue() != 0) {  // find the non-zero target
+                            if (state[i][k].isChecked()) {  // if checked, directly move that to the next
+                                state[i][k - 1].setValue(state[i][j].getValue());  // move
+                                if (k - 1 != j) {
+                                    state[i][j].setValue(0);  // set that to 0
+                                    changed = true;
+                                }
+                                break;
+                            } else {  // it is unchecked
+                                // compare values
+                                if (state[i][k].getValue() == state[i][j].getValue()) {  // same -> merge
+                                    changed = true;
+                                    state[i][k].setValue(state[i][k].getValue() * 2);  // grow
+                                    state[i][k].check();  // check only after merging
+                                    state[i][j].setValue(0);  // set that to zero
+                                } else {  // different -> move
+                                    state[i][k - 1].setValue(state[i][j].getValue());  // move
+                                    if (k - 1 != j) {
+                                        state[i][j].setValue(0);  // set that to zero
+                                        changed = true;
+                                    }
+                                }
+                                break;
+                            }
+                        } else if (k == 3) {  // reaches the head, and it is unchecked
+                            state[i][3].setValue(state[i][j].getValue());  // place that item to the head
+                            state[i][j].setValue(0);  // set that to 0
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+        if (checkGameOver()) {
+            return ((View) () -> "game over.").render();
+        }
+        this.uncheckAll(state);
+        // generate a new number in a random empty cell
+        if (changed) {
+            generateNew(state);
+
+        }
+        this.gameBoard.setState(state);
+        return viewRegistry.get("board").render();
+    }
+
+    private void generateNew(Cell[][] state) {
+        // find all empty spots
+        List<Point> emptySpots = new ArrayList<>();
+        // iterate all entries
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (state[i][j].getValue() == 0 ) {
+                    emptySpots.add(new Point(i, j));
+                }
+            }
+        }
+        int value = RandomService.random2or4();
+        Point target = emptySpots.get(RandomService.random(0, emptySpots.size() - 1));
+        System.out.println(target.getX());
+        System.out.println(target.getY());
+        state[target.getX()][target.getY()].setValue(value);
+    }
+
+    private void uncheckAll(Cell[][] state) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                state[i][j].unCheck();
+            }
+        }
     }
 }
