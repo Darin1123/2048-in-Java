@@ -1,0 +1,1146 @@
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{paralist}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{hhline}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{url}
+\usepackage{hyperref}
+
+\oddsidemargin -10mm
+\evensidemargin -10mm
+\textwidth 160mm
+\textheight 200mm
+\renewcommand\baselinestretch{1.0}
+
+\pagestyle {plain}
+\pagenumbering{arabic}
+
+\newcounter{stepnum}
+
+%% Comments
+
+\usepackage{color}
+
+\newif\ifcomments\commentstrue
+
+\ifcomments
+\newcommand{\authornote}[3]{\textcolor{#1}{[#3 ---#2]}}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\else
+\newcommand{\authornote}[3]{}
+\newcommand{\todo}[1]{}
+\fi
+
+\newcommand{\wss}[1]{\authornote{blue}{SS}{#1}}
+
+\begin {document}
+\begin{center}
+\huge \textbf{Assignment 4 Specification}\\[4mm]
+\large \textbf{SFWR ENG 2AA4, COMP SCI 2ME3}\\[2mm]
+Zefeng Wang, 400085065, wangz217\\[2mm]
+April 12, 2021
+\end{center}
+
+\newpage
+This Module Interface Specification (MIS) document contains modules, types and
+methods used to the game 2048. This a a popular game that aims to reach the target 2048 (or even more!).
+
+% In applying the specification, there may be cases that involve undefinedness.
+% We will interpret undefinedness following~\cite{Farmer2004}:
+
+% If $p: \alpha_1 \times .... \times \alpha_n \rightarrow \mathbb{B}$ and any of
+% $a_1, ..., a_n$ is undefined, then $p(a_1, ..., a_n)$ is False.  For instance,
+% if $p(x) = 1/x < 1$, then $p(0) = \text{False}$.  In the language of our
+% specification, if evaluating an expression generates an exception, then the
+% value of the expression is undefined.
+
+% \wss{The parts that you need to fill in are marked by comments, like this one.
+%   In several of the modules local functions are specified.  You can use these
+%   local functions to complete the missing specifications.}
+
+% \wss{As you edit the tex source, please leave the \texttt{wss} comments in the
+%   file.  Put your answer \textbf{after} the comment.  This will make grading
+%   easier.}
+
+% \bibliographystyle{plain}
+% \bibliography{SmithCollectedRefs}
+
+\newpage
+
+%%
+% Direction Module
+%
+
+\section* {Direction Module}
+
+\subsection*{Module}
+
+Direction
+
+\subsection* {Uses}
+
+None
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+IndicatorT = \{\\
+    UP, \\
+    DOWN, \\
+    LEFT, \\
+    RIGHT \\
+\}
+
+\subsubsection* {Exported Access Programs}
+
+None
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Considerations}
+
+When implementing in Java, use enums.
+
+\newpage
+
+%%
+% Direction Module
+%
+
+\section* {Direction Module}
+
+\subsection*{Module}
+
+Command
+
+\subsection* {Uses}
+
+None
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+Command = \{\\
+    W, \textit{\# move up}\\
+    A, \textit{\# move left}\\
+    S, \textit{\# move down}\\
+    D, \textit{\# move right}\\
+    R, \textit{\# restart the game}\\
+    P, \textbf{\# display the game board}\\
+    HELP, \textit{\# display the help page}\\
+    EXIT \textit{\# exit the game}\\
+\}
+
+\subsubsection* {Exported Access Programs}
+
+None
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Considerations}
+
+When implementing in Java, use enums.
+
+\newpage
+
+\section* {View Interface Module}
+
+\subsection*{Interface Module}
+
+View
+
+\subsection* {Uses}
+
+None
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+None
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+render &   & String & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+
+None
+
+\newpage
+
+%%
+% Cell Module
+%
+
+\section*{Cell Module}
+\subsection* {Module}
+Cell
+\subsection* {Uses}
+None
+\subsection* {Syntax}
+\subsubsection* {Exported Constants}
+None
+\subsection* {Exported Types}
+Cell = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{6cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new Cell & & Cell of  & \\
+\hline
+isChecked & &  $\mathbb{B}$ & \\
+\hline
+check & && \\
+\hline
+uncheck & && \\
+\hline
+clear & && \\
+\hline
+setValue & $\mathbb{N}$ && \\
+\hline
+getValue & & $\mathbb{N}$& \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+\subsubsection*{State Variables}
+$checked$: boolean\\
+$value$: $\mathbb{N}$
+\subsubsection* {State Invariant}
+None
+
+\subsubsection* {Assumptions}
+None
+
+\subsection* {Access Routine Semantics}
+new Cell():
+\begin{itemize}
+\item transition: $checked$ := false, $value$: = 0
+\item output: out := $self$
+\item exception: none
+\end{itemize}
+isChecked():
+\begin{itemize}
+\item output: out := $checked$
+\item exception: none
+\end{itemize}
+check():
+\begin{itemize}
+\item transition: $checked$ := true
+\item exception: none
+\end{itemize}
+uncheck():
+\begin{itemize}
+\item transition: $checked$ := false
+\item exception: none
+\end{itemize}
+setValue(newValue):
+\begin{itemize}
+\item transition: $value$ := $newValue$
+\item exception: none
+\end{itemize}
+clear():
+\begin{itemize}
+\item transition: $value$ := 0
+\item exception: none
+\end{itemize}
+getValue():
+\begin{itemize}
+\item out: $value$
+\item exception: none
+\end{itemize}
+
+\newpage
+
+
+
+
+%%
+% Point Module
+%
+
+\section*{Point Module}
+\subsection* {Module}
+Point
+\subsection* {Uses}
+None
+\subsection* {Syntax}
+\subsubsection* {Exported Constants}
+None
+\subsection* {Exported Types}
+Point = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{6cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new Point & $\mathbb{N}$, $\mathbb{N}$ & Cell of  & \\
+\hline
+getX & &  $\mathbb{N}$ & \\
+\hline
+getY & & $\mathbb{N}$& \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+\subsubsection*{State Variables}
+$x$: $\mathbb{N}$\\
+$y$: $\mathbb{N}$
+\subsubsection* {State Invariant}
+None
+
+\subsubsection* {Assumptions}
+None
+
+\subsection* {Access Routine Semantics}
+new Point(x, y):
+\begin{itemize}
+\item transition: $x$ := x, $y$: = y
+\item output: out := $self$
+\item exception: none
+\end{itemize}
+getX():
+\begin{itemize}
+\item output: out := $x$
+\item exception: none
+\end{itemize}
+getY():
+\begin{itemize}
+\item output: out := $y$
+\item exception: none
+\end{itemize}
+\newpage
+
+
+
+
+%%
+% ErrorMessage Module
+%
+
+\section*{ErrorMessage Module}
+\subsection* {Module}
+Cell
+\subsection* {Uses}
+None
+\subsection* {Syntax}
+\subsubsection* {Exported Constants}
+None
+\subsection* {Exported Types}
+Cell = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{6cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new ErrorMessage & & Errormessage of  & \\
+\hline
+getMessage & &  String & \\
+\hline
+setmessage & String && \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+\subsubsection*{State Variables}
+$message$:String
+\subsubsection* {State Invariant}
+None
+
+\subsubsection* {Assumptions}
+None
+
+\subsection* {Access Routine Semantics}
+new ErrorMessage():
+\begin{itemize}
+\item transition: $message$ := ``Error!"
+\item output: out := $self$
+\item exception: none
+\end{itemize}
+getMessage():
+\begin{itemize}
+\item output: out := $message$
+\item exception: none
+\end{itemize}
+setMessage(message):
+\begin{itemize}
+\item transition: $message$ := message
+\item exception: none
+\end{itemize}
+
+\newpage
+
+%%
+% GameBoard Module
+%
+\section*{GameBoard Module}
+\subsection* {Module}
+GameBoard
+\subsection* {Uses}
+None
+\subsection* {Syntax}
+\subsubsection* {Exported Constants}
+None
+\subsection* {Exported Types}
+GameBoard = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{3cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new GameBoard & & GameBoard of  & \\
+\hline
+getState & & sequence of sequence of Cell & \\
+\hline
+setState & sequence of sequence of Cell && \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+\subsubsection*{State Variables}
+$state$: sequence of sequence of Cell\\
+\subsubsection* {State Invariant}
+None
+
+\subsubsection* {Assumptions}
+None
+
+\subsection* {Access Routine Semantics}
+new Cell():
+\begin{itemize}
+\item transition: $state$ := Cell[4][4]
+\item output: out := $self$
+\item exception: none
+\end{itemize}
+getState():
+\begin{itemize}
+\item output: out := $state$
+\item exception: none
+\end{itemize}
+setState(newState):
+\begin{itemize}
+\item transition: $checked$ := newState
+\item exception: none
+\end{itemize}
+\newpage
+
+
+
+
+
+
+
+
+
+%%
+% ViewRegistry Modules
+%
+
+\section*{ViewRegistry Interface Module}
+
+\subsection* {Interface Module}
+
+ViewRegistry
+
+\subsection* {Uses}
+
+All modules that implements View interface
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+ViewRegistry = ? 
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{6cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new ViewRegistry & & ViewRegistry & \\
+\hline
+get & String & View & \\
+\hline
+register &String, View &  & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+\subsubsection* {State Variables}
+$viewMap$: Map$<$ String, View$>$
+\subsubsection* {State Invariant}
+None
+
+\subsubsection* {Assumptions}
+None
+
+\subsection* {Access Routine Semantics}
+new ViewRegistry():
+\begin{itemize}
+\item transition: $viewMap$ := new Map()
+\item output: out := $self$
+\item exception: none
+\end{itemize}
+get(key):
+\begin{itemize}
+\item output: out := $viewMap.get(key)$
+\item exception: none
+\end{itemize}
+register(name, view):
+\begin{itemize}
+\item transition: $viewMap.put(name, view)$
+\item exception: $self$
+\end{itemize}
+
+\newpage
+
+
+
+
+
+
+%%
+% Concrete View Modules
+%
+
+% Welcome View Module
+
+
+
+\section* {WelcomeView Module}
+
+\subsection*{Module}
+
+Template WelcomeView Module inherits View
+
+\subsection* {Uses}
+
+View
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+WelcomeView = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new WelcomeView &  & WelcomeView & \\
+\hline
+render & & String & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+new WelcomeView():
+\begin{itemize}
+\item output: $self$
+\item exception: none
+\end{itemize}
+render():
+\begin{itemize}
+\item output: \# customized String for printing
+\item exception: none
+\end{itemize}
+
+\newpage
+
+
+
+
+
+% Error View Module
+
+\section* {ErrorView Module}
+
+\subsection*{Module}
+
+Template ErrorView Module inherits View
+
+\subsection* {Uses}
+
+View
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+ErrorView = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new ErrorView &  & ErrorView & \\
+\hline
+render & & String & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+$errorMessage$: ErrorMessage
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+new WelcomeView():
+\begin{itemize}
+\item output: $self$
+\item exception: none
+\end{itemize}
+render():
+\begin{itemize}
+\item output: \# customized String for printing
+\item exception: none
+\end{itemize}
+
+\newpage
+
+
+
+% Error View Module
+
+\section* {ErrorView Module}
+
+\subsection*{Module}
+
+Template ErrorView Module inherits View
+
+\subsection* {Uses}
+
+View
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+ErrorView = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new ErrorView & ErrorMessage & ErrorView & \\
+\hline
+render &  & String&\\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+$errorMessage$: String
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+new ErrorView(errorMessage):
+\begin{itemize}
+\item transition: $errorMessage$ :=errorMessage
+\item output: $self$
+\item exception: none
+\end{itemize}
+setErrorMessage(message):
+\begin{itemize}
+\item transition: $errorMessage$ := message
+\item exception: none
+\end{itemize}
+render():
+\begin{itemize}
+\item output: \# customized String for printing
+\item exception: none
+\end{itemize}
+
+\newpage
+
+
+
+
+
+
+% Help View Module
+
+\section* {HelpView Module}
+
+\subsection*{Module}
+
+Template HelpView Module inherits View
+
+\subsection* {Uses}
+
+View
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+HelpVIew = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new HelpView &  & HelpView & \\
+\hline
+render & & String & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+new HelpView():
+\begin{itemize}
+\item output: $self$
+\item exception: none
+\end{itemize}
+render():
+\begin{itemize}
+\item output: \# customized String for printing
+\item exception: none
+\end{itemize}
+
+\newpage
+
+
+
+% GameBoard View Module
+
+\section* {GameBoard Module}
+
+\subsection*{Module}
+
+Template HelpView Module inherits View
+
+\subsection* {Uses}
+
+View
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+GameBoardView = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new GameBoardView & GameBoard  & GameBoardView & \\
+\hline
+render & & String & \\
+\hline
+setTableCharacter & char & & \\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+$gameBoard$: GameBoard\\
+$tableCharacter$: char
+
+\subsubsection* {State Invariant}
+
+$DEFAULT\_TABLE\_CHAR$: char 
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+new GameBoardView(board):
+\begin{itemize}
+\item transition: $gameBoard := board$
+\item output: $self$
+\item exception: none
+\end{itemize}
+render():
+\begin{itemize}
+\item output: \# render the game board object using the table char.
+\item exception: none
+\end{itemize}
+setTableCharacter(c):
+\begin{itemize}
+\item transition: $tableCharacter$ := c
+\item exception: none
+\end{itemize}
+\newpage
+
+
+
+
+
+
+\section* {RandomService Module}
+
+\subsection*{Module}
+
+RandomService
+
+\subsection* {Uses}
+
+None
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+None
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+  \hline
+    random & & $\mathbb{R}$ & \\
+  \hline
+    random & $\mathbb{N}$, $\mathbb{N}$  & $\mathbb{N}$ & \\
+  \hline
+ random2or4& & $\mathbb{N}$ & \\
+  \hline
+ pick & sequence of  $\mathbb{N}$& $\mathbb{N}$ & \\
+  \hline
+  
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+None
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+
+\noindent random():
+\begin{itemize}
+\item output: out:= \# random number in range [0, 1]; This is random number generation is assumed to be provided
+\item exception: none
+\end{itemize}
+
+\noindent random(lo, hi):
+\begin{itemize}
+\item output: $out := floor(random() \times floor(hi - lo + 1)) + lo$ \# floor() is assumed to be provided by the language math library.
+\item exception: none
+\end{itemize}
+
+\noindent random2or4( ):
+\begin{itemize}
+\item output: $out := random() > 0.9 \implies 4 | True \implies 2$
+\item exception: none
+\end{itemize}
+
+\noindent pick(choices):
+\begin{itemize}
+\item output: $out := choices[random(0, choices.length-1)]$
+\item exception: none
+\end{itemize}
+
+\newpage
+
+
+
+
+
+
+
+
+
+\section* {GameController Module}
+
+\subsection*{Module}
+
+GameController
+
+\subsection* {Uses}
+
+GameBoard, Direction, RandomService, ViewRegistry
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+GameController = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+\hline
+\textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+\hline
+new GameController & GameBoard, ErrorMessage, ViewRegistry & GameController & \\
+\hline
+reset & & String & ~\\
+\hline
+checkGameOver &  & $\mathbb{B}$ & ~\\
+\hline
+collapse & Direction & String & ~\\
+\hline
+displayWelcome & & String &\\
+\hline
+displayBoard & & String & ~\\
+\hline
+displayHelp & & String & ~\\
+\hline
+displayError & String& String & ~\\
+\hline
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+$board: GameBoard$\\
+$errorMessage: ErrorMessage$\\
+$viewRegistry: viewRegistry$\\
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+None
+
+\subsubsection* {Access Routine Semantics}
+
+PASS
+
+\newpage
+
+
+
+
+
+
+
+\section* {GameRunner Module}
+
+\subsection*{Module}
+
+GameRunner
+
+\subsection* {Uses}
+
+GameController, Command
+
+\subsection* {Syntax}
+
+\subsubsection* {Exported Constants}
+
+None
+
+\subsubsection* {Exported Types}
+
+GameRunner = ?
+
+\subsubsection* {Exported Access Programs}
+
+\begin{tabular}{| l | l | l | p{5cm} |}
+  \hline
+  \textbf{Routine name} & \textbf{In} & \textbf{Out} & \textbf{Exceptions}\\
+  \hline
+  new GameRunner & GameController   & GameRunner & \\
+  \hline
+  process & String & String & ~\\
+  \hline
+  run & & & ~\\
+  \hline
+  exit &&&\\
+  \hline
+  
+\end{tabular}
+
+\subsection* {Semantics}
+
+\subsubsection* {State Variables}
+
+$gameController: \text{GameController}$\\
+
+\subsubsection* {State Invariant}
+
+None
+
+\subsubsection* {Assumptions}
+
+The run method is going to be called to run the game.
+
+\subsubsection* {Access Routine Semantics}
+
+PASS
+
+\newpage
+
+
+
+
+
+\end {document}
