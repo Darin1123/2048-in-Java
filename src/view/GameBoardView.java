@@ -3,15 +3,29 @@ package view;
 import model.Cell;
 import model.GameBoard;
 
+/**
+ * @author Zefeng Wang - wangz217
+ * @brief Game Board View
+ */
+
 public class GameBoardView implements View {
-    private GameBoard gameBoard;
+    private final GameBoard gameBoard;
     private char tableCharacter;
     private final char DEFAULT_TABLE_CHAR = '.';
+
+    /**
+     * @brief Constructor
+     * @param gameBoard the game board object
+     */
     public GameBoardView(GameBoard gameBoard) {
         tableCharacter = DEFAULT_TABLE_CHAR;
         this.gameBoard = gameBoard;
     }
 
+    /**
+     * @brief set new character
+     * @param newChar the new character
+     */
     public void setTableCharacter(char newChar) {
         this.tableCharacter = newChar;
     }
@@ -37,6 +51,11 @@ public class GameBoardView implements View {
         return builder.toString();
     }
 
+    /**
+     * @brief format number for neatly printing
+     * @param cell the cell
+     * @return the formatted string
+     */
     private String formatNumber(Cell cell) {
         if (cell.getValue() == 0) {
             return ".      ";

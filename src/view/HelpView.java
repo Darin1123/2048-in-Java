@@ -1,5 +1,10 @@
 package view;
 
+/**
+ * @author Zefeng Wang - wangz217
+ * @brief Help View Module
+ */
+
 public class HelpView implements View {
     @Override
     public String render() {

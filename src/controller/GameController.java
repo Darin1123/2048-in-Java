@@ -13,12 +13,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author Zefeng Wang - wangz217
+ * @brief Game Controller Module
+ */
 
 public class GameController {
     private final GameBoard gameBoard;
     private final ErrorMessage errorMessage;
     private final ViewRegistry viewRegistry;
 
+    /**
+     * @brief constructor
+     * @param gameBoard the game board object
+     * @param errorMessage the error message object
+     * @param viewRegistry the view registry
+     */
     public GameController(
             GameBoard gameBoard,
             ErrorMessage errorMessage,
@@ -28,6 +38,10 @@ public class GameController {
         this.viewRegistry = viewRegistry;
     }
 
+    /**
+     * @brief reset the game
+     * @return the rendered content after reset
+     */
     public String reset() {
         Cell[][] state = new Cell[4][4];
         for (int i = 0; i < 4; i++) {
@@ -62,12 +76,16 @@ public class GameController {
                 viewRegistry.get("board").render();
     }
 
+    /**
+     * @brief check if game over
+     * @return the result
+     */
     public boolean checkGameOver() {
         // check game over
         Cell[][] data = gameBoard.getState();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                if (!data[i][j].isChecked()) { // contains empty cell
+                if (data[i][j].getValue() == 0) { // contains empty cell
                     return false;
                 }
                 int value = data[i][j].getValue();
@@ -82,6 +100,11 @@ public class GameController {
         return true;
     }
 
+    /**
+     * @brief move logic
+     * @param direction the move direction
+     * @return the rendered board content after moving
+     */
     public String collapse(Direction direction) {
         switch (direction) {
             case LEFT:
@@ -97,23 +120,44 @@ public class GameController {
         }
     }
 
+    /**
+     * @brief display error view
+     * @param errorMessage the error message
+     * @return rendered error view
+     */
     public String displayError(String errorMessage) {
         this.errorMessage.setMessage(errorMessage);
         return this.viewRegistry.get("error").render();
     }
 
+    /**
+     * @brief display game board view
+     * @return rendered game board view
+     */
     public String displayGameBoard() {
         return this.viewRegistry.get("board").render();
     }
 
+    /**
+     * @brief display help view
+     * @return rendered help view
+     */
     public String displayHelp() {
         return this.viewRegistry.get("help").render();
     }
 
+    /**
+     * @brief display welcome view
+     * @return rendered welcome view
+     */
     public String displayWelcome() {
         return this.viewRegistry.get("welcome").render();
     }
 
+    /**
+     * @brief move down
+     * @return the rendered board content after moving
+     */
     private String collapseDown() {
         Cell[][] state = this.gameBoard.getState();
         boolean changed = false;
@@ -155,9 +199,6 @@ public class GameController {
             }
         }
 
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
         this.uncheckAll(state);
         // generate a new number in a random empty cell
         if (changed) {
@@ -167,6 +208,10 @@ public class GameController {
         return viewRegistry.get("board").render();
     }
 
+    /**
+     * @brief move up
+     * @return the rendered board content after moving
+     */
     private String collapseUp() {
         Cell[][] state = this.gameBoard.getState();
         boolean changed = false;
@@ -208,9 +253,6 @@ public class GameController {
             }
         }
 
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
         this.uncheckAll(state);
         // generate a new number in a random empty cell
         if (changed) {
@@ -220,6 +262,10 @@ public class GameController {
         return viewRegistry.get("board").render();
     }
 
+    /**
+     * @brief move left
+     * @return the rendered board content after moving
+     */
     private String collapseLeft() {
         Cell[][] state = this.gameBoard.getState();
         boolean changed = false;
@@ -233,7 +279,6 @@ public class GameController {
                                 if (k + 1 != j) {
                                     state[i][j].setValue(0);  // set that to 0
                                     changed = true;
-
                                 }
                                 break;
                             } else {  // it is unchecked
@@ -261,10 +306,6 @@ public class GameController {
                 }
             }
         }
-
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
         this.uncheckAll(state);
         // generate a new number in a random empty cell
         if (changed) {
@@ -274,6 +315,10 @@ public class GameController {
         return viewRegistry.get("board").render();
     }
 
+    /**
+     * @brief move right
+     * @return the rendered board content after moving
+     */
     private String collapseRight() {
         Cell[][] state = this.gameBoard.getState();
         boolean changed = false;
@@ -314,19 +359,19 @@ public class GameController {
                 }
             }
         }
-        if (checkGameOver()) {
-            return ((View) () -> "game over.").render();
-        }
+
         this.uncheckAll(state);
         // generate a new number in a random empty cell
         if (changed) {
             generateNew(state);
-
         }
         this.gameBoard.setState(state);
         return viewRegistry.get("board").render();
     }
 
+    /**
+     * @brief generate new number after moving
+     */
     private void generateNew(Cell[][] state) {
         // find all empty spots
         List<Point> emptySpots = new ArrayList<>();
@@ -340,11 +385,12 @@ public class GameController {
         }
         int value = RandomService.random2or4();
         Point target = emptySpots.get(RandomService.random(0, emptySpots.size() - 1));
-        System.out.println(target.getX());
-        System.out.println(target.getY());
         state[target.getX()][target.getY()].setValue(value);
     }
 
+    /**
+     * @brief uncheck all cells
+     */
     private void uncheckAll(Cell[][] state) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {

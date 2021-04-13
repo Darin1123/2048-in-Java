@@ -1,5 +1,10 @@
 package view;
 
+/**
+ * @author Zefeng Wang - wangz217
+ * @brief Welcome View Module
+ */
+
 public class WelcomeView implements View {
 
     @Override

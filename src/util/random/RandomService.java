@@ -1,5 +1,10 @@
 package util.random;
 
+/**
+ * @author Zefeng Wang - wangz217
+ * @brief Random Service Module
+ */
+
 public class RandomService {
     /**
      * @brief generates a real number in range [0.0, 1.0]

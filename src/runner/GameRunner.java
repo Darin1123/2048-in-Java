@@ -5,25 +5,39 @@ import model.ErrorMessage;
 import model.GameBoard;
 import util.enumeration.Command;
 import util.enumeration.Direction;
-import view.ErrorView;
-import view.GameBoardView;
-import view.HelpView;
-import view.WelcomeView;
+import view.*;
 
 import java.util.Scanner;
+
+/**
+ * @author Zefeng Wang - wangz217
+ * @brief Game Runner Module
+ */
 
 public class GameRunner {
 
     private GameController gameController;
 
+    /**
+     * @brief set the game controller
+     * @param gameController the game controller
+     */
     public void setGameController(GameController gameController) {
         this.gameController = gameController;
     }
 
+    /**
+     * @brief exit the game
+     */
     public void exit() {
         System.exit(1);
     }
 
+    /**
+     * @brief process the input
+     * @param input the input
+     * @return the result
+     */
     public String process(String input) {
         Command command;
         try {
@@ -72,6 +86,9 @@ public class GameRunner {
 
     }
 
+    /**
+     * @brief the main run code here
+     */
     public void run() {
         // initialize beans
         ErrorMessage errorMessage = new ErrorMessage();
@@ -100,6 +117,19 @@ public class GameRunner {
         while (!gameController.checkGameOver()) {
             System.out.print(">> ");
             System.out.println(this.process(keyboardInputScanner.next()));
+        }
+        System.out.println(((View) () -> "Game Over!\n").render());
+        while (true) {
+            System.out.println(((View) () -> "Press [R] to restart, 'exit' to quit.\n").render());
+            System.out.print(">> ");
+            String input = keyboardInputScanner.next();
+            if (input.equalsIgnoreCase("R")) {
+                this.run();
+                break;
+            } else if (input.equalsIgnoreCase("exit")) {
+                System.out.println(((View) () -> "Bye!\n").render());
+                break;
+            }
         }
     }
 

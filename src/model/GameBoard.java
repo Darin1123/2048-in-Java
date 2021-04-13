@@ -5,18 +5,18 @@ import util.random.RandomService;
 
 import java.util.*;
 
+/**
+ * @author Zefeng Wang - wangz217
+ * @brief Game Board Module
+ */
+
 public class GameBoard {
 
     private Cell[][] state;
 
-    public Cell[][] getState() {
-        return state;
-    }
-
-    public void setState(Cell[][] state) {
-        this.state = state;
-    }
-
+    /**
+     * @brief constructor
+     */
     public GameBoard() {
         Cell[][] state = new Cell[4][4];
         for (int i = 0; i < 4; i++) {
@@ -46,5 +46,21 @@ public class GameBoard {
         state[x1][y1].setValue(v1);
         state[x2][y2].setValue(v2);
         this.setState(state);
+    }
+
+    /**
+     * @brief get inner information
+     * @return the state
+     */
+    public Cell[][] getState() {
+        return state;
+    }
+
+    /**
+     * @brief set the new state
+     * @param state the new state
+     */
+    public void setState(Cell[][] state) {
+        this.state = state;
     }
 }
