@@ -97,7 +97,6 @@ public class GameRunner {
         WelcomeView welcomeView = new WelcomeView();
         GameBoardView gameBoardView = new GameBoardView(gameBoard);
 
-
         viewRegistry.register("board", gameBoardView)
                 .register("help", new HelpView())
                 .register("error", new ErrorView(errorMessage))
